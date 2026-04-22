@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fogón Peruano</title>
+
+</head>
+<link rel="stylesheet" href="style.css">
+
+<body>
+
+<header>
+<div class="header-left">
+    <div class="logo">
+    <img src="img/logo.png.png" alt="Logo">
+</div>
+
+    <div class="menu">
+        <div class="site-title">Fogón Peruano</div>
+
+        <div class="dropdown">
+            <a href="#" onclick="mostrarInicio(event)">Inicio</a>
+            <a href="#" onclick="mostrarCartaCompleta(event)">Menu</a>
+            <a href="#" onclick="scrollToCart()">Carrito</a>
+            <a href="#" onclick="scrollToReservas()">Reservas</a>
+        </div>
+    </div>
+</div>
+        <div class="header-right">
+            <button class="cart-icon" onclick="scrollToCart()">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <path d="M7 18c-1.1 0-1.99.9-1.99 2S5.9 22 7 22s2-.9 2-2-.9-2-2-2Zm10 0c-1.1 0-1.99.9-1.99 2S15.9 22 17 22s2-.9 2-2-.9-2-2-2ZM7.17 14h9.92c.75 0 1.41-.41 1.75-1.03l3.58-6.49A1 1 0 0 0 21.55 5H6.21l-.94-2H2v2h2l3.6 7.59-1.35 2.45A1.99 1.99 0 0 0 8 18h12v-2H8l1.17-2Z"/>
+                </svg>
+                Carrito <span id="cartCount">0</span>
+            </button>
+        </div>
+    </div>
+</header>
+
+<section class="hero" id="heroSection">
+    <div class="hero-card">
+        <h1>Bienvenido a Fogón Peruano</h1>
+        <p>Desde aqui puedes ver la especialidad de la casa o revisar nuestro menu completo.</p>
+        <div class="hero-actions">
+            <button class="hero-btn primary" onclick="mostrarEspecialidad(event)">Especialidad de la casa</button>
+            <button class="hero-btn secondary" onclick="mostrarCartaCompleta(event)">Menu completo</button>
+        </div>
+    </div>
+    <div class="hero-slider-shell">
+        <div class="hero-slider-top">
+            <div>
+                <h2>Pide desde nuestras promos</h2>
+                <p>Toca una imagen y te llevamos directo al plato, bebida o categoria para que hagas tu pedido mas rapido.</p>
+            </div>
+            <div class="slider-controls">
+                <button class="slider-btn" type="button" onclick="moverSlider(-1)">&#10094;</button>
+                <button class="slider-btn" type="button" onclick="moverSlider(1)">&#10095;</button>
+            </div>
+        </div>
+        <div class="hero-slider-window">
+            <div class="hero-slider-track" id="heroSliderTrack"></div>
+        </div>
+        <div class="slider-dots" id="sliderDots"></div>
+    </div>
+</section>
+
+<section class="home-sections" id="homeSections">
+    <div class="info-grid">
+        <div class="info-card" id="reservasSection">
+            <h2>Reservaciones en el restaurante</h2>
+            <p>Separa tu mesa para almuerzos, cenas familiares o reuniones especiales desde el inicio.</p>
+            <form class="reservation-form" onsubmit="enviarReservacion(event)">
+                <input type="text" id="reservaNombre" placeholder="Nombre completo" required>
+                <input type="tel" id="reservaTelefono" placeholder="Telefono o celular" required>
+                <input type="date" id="reservaFecha" required>
+                <select id="reservaPersonas" required>
+                    <option value="">Numero de personas</option>
+                    <option>2 personas</option>
+                    <option>4 personas</option>
+                    <option>6 personas</option>
+                    <option>8+ personas</option>
+                </select>
+                <button type="submit">Reservar mesa</button>
+            </form>
+            <p class="reservation-note"></p>
+        </div>
+
+        <div class="info-card">
+            <h2>Ubicacion del local</h2>
+            <p>Muestra la direccion actual del restaurante o coloca una nueva referencia para personalizar la pagina.</p>
+            <div class="location-gallery">
+                <img src="img/fogon.png.jpeg" class="img-local" alt="Imagen de referencia del local 1">
+                <img src="img/interior.jpg" class="img-local" alt="Imagen de referencia del local 2">
+            </div>
+            <a class="location-map-btn" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer">📍 Ver en Google Maps</a>
+            <div class="location-box">
+                <strong id="localNombre">Fogón Peruano Restaurante</strong>
+                <span id="localDireccion">Av. Principal 123, Centro de la ciudad</span>
+                <span id="localReferencia">Referencia: frente a la plaza principal</span>
+                <div class="location-hours">
+                    <strong>Horario de atencion</strong>
+                    <span>Lunes a viernes: 10:00 a.m. - 10:00 p.m.</span>
+                    <span>Sabado y domingo: 12:00 p.m. - 10:00 p.m.</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="categories" id="categories"></div>
+
+<div class="menu-section" id="menuSection">
+    <button class="back-btn" id="backBtn" onclick="volverVistaAnterior()">Volver</button>
+    <h2 class="section-title" id="sectionTitle"></h2>
+    <p class="section-subtitle hidden" id="sectionSubtitle"></p>
+    <div class="container" id="menu"></div>
+</div>
+
+<div id="overlay" onclick="cerrarCarrito()"></div>
+
+<section class="cart-panel-lateral" id="cartPanel">
+    <div class="cart-panel">
+
+        <h2 class="cart-heading" style="display:flex; align-items:center;">
+            Carrito
+
+            <button onclick="cerrarCarrito()" class="close-cart-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M18 6L6 18M6 6l12 12"/>
+                </svg>
+            </button>
+        </h2>
+
+        <div class="cart-items" id="cartItems"></div>
+        <div class="cart">
+            <div class="cart-left">
+                <div class="cart-customer">
+                    <label class="cart-field">
+                        <span>Cliente</span>
+                        <input type="text" id="clienteNombre" placeholder="Tu nombre">
+                    </label>
+                    <label class="cart-field hidden" id="direccionField">
+                        <span>Direccion de entrega</span>
+                        <input type="text" id="clienteDireccion" placeholder="Tu direccion">
+                    </label>
+                </div>
+
+                <div class="cart-extra">
+                    <div class="cart-methods">
+                        <button class="cart-method active" id="tiendaBtn" onclick="setFogonPeruanoMethod('tienda')">Pedido en tienda</button>
+                        <button class="cart-method" id="deliveryBtn" onclick="setFogonPeruanoMethod('delivery')">Delivery</button>
+                    </div>
+
+                    <div class="cart-state-box" id="stateSection">
+                        <p class="cart-box-title">Donde estas sentado?</p>
+                        <div class="cart-inline">
+                            <label class="cart-field">
+                                <span>Piso</span>
+                                <select id="clientePiso">
+                                    <option value="Piso 1">Piso 1</option>
+                                    <option value="Piso 2">Piso 2</option>
+                                    <option value="Terraza">Terraza</option>
+                                </select>
+                            </label>
+                            <label class="cart-field">
+                                <span>Estado</span>
+                                <select id="clienteEstado">
+                                    <option value="Mesa normal">Mesa Normal</option>
+                                    <option value="Mesa normal">Mesa Familiar</option>
+                                    <option value="Barra">Barra</option>
+                                    <option value="Salon privado">Salon Privado</option>
+                                </select>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="cart-table-box" id="mesaSection">
+                        <p class="cart-box-title">Selecciona tu mesa</p>
+                        <div class="table-grid">
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 1', event)">Mesa 1</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 2', event)">Mesa 2</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 3', event)">Mesa 3</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 4', event)">Mesa 4</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 5', event)">Mesa 5</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 6', event)">Mesa 6</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 7', event)">Mesa 7</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 8', event)">Mesa 8</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 9', event)">Mesa 9</button>
+                            <button type="button" class="table-btn" onclick="seleccionarMesa('Mesa 10', event)">Mesa 10</button>
+                        </div>
+                    </div>
+
+                    <div class="cart-payment-box">
+                        <p class="cart-box-title">Metodo de pago</p>
+                        <label class="cart-field">
+                            <span>Pago</span>
+                            <select id="metodoPago" onchange="actualizarMetodoPago()">
+                                <option value="Efectivo">Efectivo</option>
+                                <option value="Yape">Yape</option>
+                                <option value="Plin">Plin</option>
+                                <option value="Transferencia">Transferencia</option>
+                            </select>
+                        </label>
+                        <p class="cart-payment-note" id="paymentNote">Pago en efectivo al momento de recibir tu pedido.</p>
+                        <p class="cart-payment-status hidden" id="paymentStatus"></p>
+                        <img class="cart-qr hidden" id="paymentQr" src="" alt="Codigo QR de pago">
+                    </div>
+                </div>
+
+                <div class="cart-summary">
+                    <div class="cart-total">Total: S/ <span id="total">0</span></div>
+                </div>
+            </div>
+            <button class="buy-btn" onclick="comprar()">Finalizar Pedido</button>
+        </div>
+    </div>
+</section>
+
+<div class="modal" id="modal" onclick="cerrarModal()">
+    <div class="modal-content" onclick="event.stopPropagation()">
+        <span class="close-btn" onclick="cerrarModal()">&times;</span>
+        <img id="modalImg" alt="Producto">
+        <h3 id="modalName"></h3>
+        <p id="modalDesc"></p>
+        <p><strong>S/ <span id="modalPrice"></span></strong></p>
+        <div class="modal-actions">
+            <button class="primary-action" onclick="agregarProducto()">Agregar</button>
+            <button class="secondary-action" onclick="cerrarModal()">Cerrar</button>
+        </div>
+    </div>
+</div>
+
+<a
+    class="whatsapp-float"
+    href="https://wa.me/51984594013?text=Hola,%20quiero%20hacer%20un%20pedido%20o%20reservar%20una%20mesa"
+    target="_blank"
+    rel="noopener noreferrer"
+    aria-label="Contactar por WhatsApp"
+>
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M20.52 3.48A11.79 11.79 0 0 0 12.09 0C5.56 0 .24 5.32.24 11.85c0 2.09.55 4.13 1.6 5.93L0 24l6.4-1.68a11.8 11.8 0 0 0 5.69 1.45h.01c6.53 0 11.85-5.32 11.85-11.85 0-3.16-1.23-6.13-3.43-8.44ZM12.1 21.74h-.01a9.8 9.8 0 0 1-5-1.38l-.36-.21-3.8 1 1.02-3.7-.23-.38a9.77 9.77 0 0 1-1.5-5.22C2.22 6.43 6.68 1.97 12.1 1.97c2.61 0 5.07 1.02 6.92 2.87a9.72 9.72 0 0 1 2.86 6.92c0 5.42-4.4 9.98-9.78 9.98Zm5.36-7.45c-.29-.14-1.73-.85-2-1-.27-.1-.47-.14-.66.15-.2.28-.76 1-.94 1.2-.17.19-.34.21-.63.07-.29-.14-1.22-.45-2.32-1.44-.86-.76-1.44-1.69-1.6-1.98-.17-.29-.02-.44.12-.58.12-.12.29-.34.43-.51.14-.17.19-.29.29-.49.1-.2.05-.37-.03-.51-.07-.14-.66-1.59-.9-2.17-.24-.58-.49-.5-.66-.51h-.56c-.2 0-.51.07-.78.37-.27.29-1.02 1-.96 2.41.05 1.42.98 2.78 1.12 2.97.14.2 1.92 3 4.75 4.09.67.29 1.2.46 1.61.58.68.22 1.29.19 1.78.12.54-.08 1.73-.71 1.97-1.39.24-.68.24-1.27.17-1.39-.07-.12-.26-.19-.56-.34Z"/>
+    </svg>
+</a>
+
+<script src="script.js"></script>
+</body>
+</html>
